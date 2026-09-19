@@ -1,9 +1,11 @@
 services:
+
   web:
     build:
       context: .
 
     container_name: allzerve-new
+
     restart: unless-stopped
 
     ports:
