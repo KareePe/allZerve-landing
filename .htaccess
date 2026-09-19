@@ -1,0 +1,16 @@
+Options -Indexes
+
+# Block dotfiles (.env, .git, .htaccess ...)
+<FilesMatch "^\.">
+    Require all denied
+</FilesMatch>
+
+# Block Composer and project metadata files
+<FilesMatch "^(composer\.(json|lock)|.*\.md)$">
+    Require all denied
+</FilesMatch>
+
+RewriteEngine On
+# Block dot-directories (.git) and server-only folders
+RewriteRule (^|/)\. - [F,L]
+RewriteRule ^(vendor|templates|storage)(/|$) - [F,L]

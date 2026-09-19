@@ -1,0 +1,13 @@
+services:
+  web:
+    build:
+      context: .
+
+    container_name: allzerve-new
+    restart: unless-stopped
+
+    ports:
+      - "127.0.0.1:3005:80"
+
+    env_file:
+      - .env

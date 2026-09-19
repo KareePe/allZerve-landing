@@ -195,6 +195,34 @@ button.submit:hover {
     color: var(--bg);
 }
 
+button.submit:disabled {
+    opacity: 0.5;
+    cursor: wait;
+}
+
+.form-status {
+    margin-top: 20px;
+    font-size: 13px;
+    min-height: 1em;
+    color: var(--text-dim);
+}
+
+.form-status.is-success {
+    color: var(--gold);
+}
+
+.form-status.is-error {
+    color: #e08a7a;
+}
+
+.hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+}
+
 footer {
     border-top: 1px solid var(--line);
     padding: 32px 0 48px;
