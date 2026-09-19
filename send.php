@@ -56,22 +56,22 @@ function withinRateLimit(string $ip): bool
     return $allowed;
 }
 
-function loadEnv(string $path): array
-{
-    if (!is_readable($path)) {
-        return [];
-    }
-    $env = [];
-    foreach (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-        $line = trim($line);
-        if ($line === '' || $line[0] === '#' || !str_contains($line, '=')) {
-            continue;
-        }
-        [$key, $value] = explode('=', $line, 2);
-        $env[trim($key)] = trim(trim($value), "\"'");
-    }
-    return $env;
-}
+// function loadEnv(string $path): array
+// {
+//     if (!is_readable($path)) {
+//         return [];
+//     }
+//     $env = [];
+//     foreach (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
+//         $line = trim($line);
+//         if ($line === '' || $line[0] === '#' || !str_contains($line, '=')) {
+//             continue;
+//         }
+//         [$key, $value] = explode('=', $line, 2);
+//         $env[trim($key)] = trim(trim($value), "\"'");
+//     }
+//     return $env;
+// }
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, false, 'Method not allowed.');
@@ -114,11 +114,15 @@ if (!withinRateLimit($_SERVER['REMOTE_ADDR'] ?? 'unknown')) {
     respond(429, false, 'Too many requests. Please try again later.');
 }
 
-$env    = loadEnv(__DIR__ . '/.env');
-$apiKey = $env['RESEND_MAIL_SERVER_KEY'] ?? '';
-$fromEmail = $env['MAIL_FROM'] ?? '';
-$fromName  = $env['MAIL_FROM_NAME'] ?? 'ALLZERVE Website';
-$mailTo    = $env['MAIL_TO'] ?? '';
+// $env    = loadEnv(__DIR__ . '/.env');
+// $apiKey = $env['RESEND_MAIL_SERVER_KEY'] ?? '';
+// $fromEmail = $env['MAIL_FROM'] ?? '';
+// $fromName  = $env['MAIL_FROM_NAME'] ?? 'ALLZERVE Website';
+// $mailTo    = $env['MAIL_TO'] ?? '';
+$apiKey = getenv('RESEND_MAIL_SERVER_KEY') ?? '';
+$fromEmail = getenv('MAIL_FROM') ?? '';
+$fromName  = getenv('MAIL_FROM_NAME') ?? 'ALLZERVE Website';
+$mailTo    = getenv('MAIL_TO') ?? '';
 
 if ($apiKey === '') {
     error_log('send.php: RESEND_MAIL_SERVER_KEY is not set in .env');
