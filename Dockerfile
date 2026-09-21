@@ -8,10 +8,11 @@ RUN apt-get update \
     && docker-php-ext-install zip opcache \
     && rm -rf /var/lib/apt/lists/*
 
-# mod_rewrite and mod_headers are off by default in this image, which silently
-# turned the whole .htaccess into a no-op; AllowOverride defaults to None too.
+# mod_rewrite and mod_headers are off by default in this image, and AllowOverride
+# defaults to None, so .htaccess is ignored until both are turned on.
+# ServerName silences Apache's "could not reliably determine FQDN" warning.
 RUN a2enmod rewrite headers deflate expires \
-    && printf '<Directory /var/www/html>\n    AllowOverride All\n    Require all granted\n</Directory>\n' \
+    && printf 'ServerName localhost\n\n<Directory /var/www/html>\n    AllowOverride All\n    Require all granted\n</Directory>\n' \
         > /etc/apache2/conf-available/allzerve.conf \
     && a2enconf allzerve
 
