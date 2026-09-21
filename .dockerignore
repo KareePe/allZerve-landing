@@ -2,4 +2,6 @@
 .gitignore
 .env
 vendor/
+storage/
 .DS_Store
+*.md

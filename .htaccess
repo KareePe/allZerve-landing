@@ -1,5 +1,49 @@
 Options -Indexes
 
+# --- Compression -----------------------------------------------------------
+
+<IfModule mod_brotli.c>
+    AddOutputFilterByType BROTLI_COMPRESS text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+<IfModule mod_deflate.c>
+    AddOutputFilterByType DEFLATE text/html text/plain text/css text/javascript application/javascript application/json image/svg+xml
+</IfModule>
+
+# --- Caching ---------------------------------------------------------------
+
+<IfModule mod_expires.c>
+    ExpiresActive On
+    ExpiresByType text/css "access plus 1 year"
+    ExpiresByType application/javascript "access plus 1 year"
+    ExpiresByType image/svg+xml "access plus 1 year"
+    ExpiresByType image/png "access plus 1 year"
+    ExpiresByType image/jpeg "access plus 1 year"
+    ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType font/woff2 "access plus 1 year"
+</IfModule>
+
+<IfModule mod_headers.c>
+    <FilesMatch "\.(css|js|svg|png|jpe?g|webp|woff2?)$">
+        Header set Cache-Control "public, max-age=31536000, immutable"
+    </FilesMatch>
+
+    # The HTML carries a per-session CSRF token, so it must never be shared.
+    <FilesMatch "\.php$">
+        Header set Cache-Control "private, no-cache"
+    </FilesMatch>
+
+    Header always set X-Content-Type-Options "nosniff"
+    Header always set X-Frame-Options "SAMEORIGIN"
+    Header always set Referrer-Policy "strict-origin-when-cross-origin"
+    Header always unset X-Powered-By
+</IfModule>
+
+# ETags add nothing once Last-Modified and long max-age are in play.
+FileETag None
+
+# --- Access control --------------------------------------------------------
+
 # Block dotfiles (.env, .git, .htaccess ...)
 <FilesMatch "^\.">
     Require all denied
@@ -10,7 +54,9 @@ Options -Indexes
     Require all denied
 </FilesMatch>
 
-RewriteEngine On
-# Block dot-directories (.git) and server-only folders
-RewriteRule (^|/)\. - [F,L]
-RewriteRule ^(vendor|templates|storage)(/|$) - [F,L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # Block dot-directories (.git) and server-only folders
+    RewriteRule (^|/)\. - [F,L]
+    RewriteRule ^(vendor|templates|storage)(/|$) - [F,L]
+</IfModule>

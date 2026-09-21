@@ -1,16 +1,18 @@
 <?php
 
-require __DIR__ . '/vendor/autoload.php';
+declare(strict_types=1);
 
 const RATE_LIMIT_MAX = 5;          // submissions allowed ...
 const RATE_LIMIT_WINDOW = 3600;    // ... per IP per this many seconds
 
 header('Content-Type: application/json; charset=utf-8');
+header('Cache-Control: no-store');
+header('X-Content-Type-Options: nosniff');
 
 function respond(int $status, bool $ok, string $message): void
 {
     http_response_code($status);
-    echo json_encode(['ok' => $ok, 'message' => $message]);
+    echo json_encode(['ok' => $ok, 'message' => $message], JSON_UNESCAPED_UNICODE);
     exit;
 }
 
@@ -56,22 +58,15 @@ function withinRateLimit(string $ip): bool
     return $allowed;
 }
 
-// function loadEnv(string $path): array
-// {
-//     if (!is_readable($path)) {
-//         return [];
-//     }
-//     $env = [];
-//     foreach (file($path, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES) as $line) {
-//         $line = trim($line);
-//         if ($line === '' || $line[0] === '#' || !str_contains($line, '=')) {
-//             continue;
-//         }
-//         [$key, $value] = explode('=', $line, 2);
-//         $env[trim($key)] = trim(trim($value), "\"'");
-//     }
-//     return $env;
-// }
+/** getenv() returns false — not null — when a variable is unset. */
+function env(string $key, string $default = ''): string
+{
+    $value = getenv($key);
+    return ($value === false || $value === '') ? $default : $value;
+}
+
+// Everything above this point is cheap. The Composer autoloader (Resend +
+// Guzzle) is only required once a request has earned the right to send mail.
 
 if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
     respond(405, false, 'Method not allowed.');
@@ -84,10 +79,13 @@ if (($_SERVER['HTTP_X_REQUESTED_WITH'] ?? '') !== 'XMLHttpRequest') {
 
 session_start();
 $token = $_POST['csrf_token'] ?? '';
-if (empty($_SESSION['csrf_token']) || !is_string($token) || !hash_equals($_SESSION['csrf_token'], $token)) {
+$valid = !empty($_SESSION['csrf_token'])
+    && is_string($token)
+    && hash_equals($_SESSION['csrf_token'], $token);
+session_write_close();
+if (!$valid) {
     respond(403, false, 'Your session has expired. Please refresh the page and try again.');
 }
-session_write_close();
 
 // Honeypot: real users never fill this hidden field
 if (!empty($_POST['website'])) {
@@ -114,22 +112,17 @@ if (!withinRateLimit($_SERVER['REMOTE_ADDR'] ?? 'unknown')) {
     respond(429, false, 'Too many requests. Please try again later.');
 }
 
-// $env    = loadEnv(__DIR__ . '/.env');
-// $apiKey = $env['RESEND_MAIL_SERVER_KEY'] ?? '';
-// $fromEmail = $env['MAIL_FROM'] ?? '';
-// $fromName  = $env['MAIL_FROM_NAME'] ?? 'ALLZERVE Website';
-// $mailTo    = $env['MAIL_TO'] ?? '';
-$apiKey = getenv('RESEND_MAIL_SERVER_KEY') ?? '';
-$fromEmail = getenv('MAIL_FROM') ?? '';
-$fromName  = getenv('MAIL_FROM_NAME') ?? 'ALLZERVE Website';
-$mailTo    = getenv('MAIL_TO') ?? '';
+$apiKey    = env('RESEND_MAIL_SERVER_KEY');
+$fromEmail = env('MAIL_FROM');
+$fromName  = env('MAIL_FROM_NAME', 'ALLZERVE Website');
+$mailTo    = env('MAIL_TO');
 
 if ($apiKey === '') {
-    error_log('send.php: RESEND_MAIL_SERVER_KEY is not set in .env');
+    error_log('send.php: RESEND_MAIL_SERVER_KEY is not set');
     respond(500, false, 'Mail service is not configured.');
 }
 if (!filter_var($fromEmail, FILTER_VALIDATE_EMAIL) || !filter_var($mailTo, FILTER_VALIDATE_EMAIL)) {
-    error_log('send.php: MAIL_FROM or MAIL_TO in .env is missing or not a valid email');
+    error_log('send.php: MAIL_FROM or MAIL_TO is missing or not a valid email');
     respond(500, false, 'Mail service is not configured.');
 }
 
@@ -142,6 +135,8 @@ $replyUrl    = htmlspecialchars(
     'UTF-8'
 );
 $sentAt = (new DateTime('now', new DateTimeZone('Asia/Bangkok')))->format('j F Y, H:i') . ' (ICT)';
+
+require __DIR__ . '/vendor/autoload.php';
 
 try {
     $resend = Resend::client($apiKey);

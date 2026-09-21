@@ -1,6 +1,7 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400&family=Jost:wght@300;400;500&display=swap');
-
 :root {
+    /* Fallbacks are metric-close so the swap from system fonts barely shifts */
+    --font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
     --bg: #0c1e15;
     --bg-soft: #0f2419;
     --gold: #c9a961;
@@ -20,12 +21,96 @@ body {
     padding: 0;
     background: var(--bg);
     color: var(--text);
-    font-family: 'Jost', sans-serif;
+    font-family: var(--font-sans);
     font-weight: 300;
 }
 
 a {
     color: inherit;
+}
+
+/* --- Preloader ------------------------------------------------------------
+   `is-loading` is added by an inline script, so visitors without JavaScript
+   never see the overlay and never get a hidden page. */
+
+.preloader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 26px;
+    background: var(--bg);
+    transition: opacity 0.5s ease, visibility 0.5s ease;
+}
+
+.preloader__logo {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    letter-spacing: 0.28em;
+    text-indent: 0.28em;
+    color: var(--gold);
+}
+
+.preloader__bar {
+    width: 120px;
+    height: 1px;
+    background: var(--line);
+    overflow: hidden;
+}
+
+.preloader__bar span {
+    display: block;
+    width: 40%;
+    height: 100%;
+    background: var(--gold);
+    animation: preloader-sweep 1.1s ease-in-out infinite;
+    will-change: transform;
+}
+
+@keyframes preloader-sweep {
+    from {
+        transform: translateX(-100%);
+    }
+
+    to {
+        transform: translateX(250%);
+    }
+}
+
+.preloader.is-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+}
+
+html.is-loading,
+html.is-loading body {
+    overflow: hidden;
+}
+
+.wrap {
+    transition: opacity 0.6s ease;
+}
+
+html.is-loading .wrap {
+    opacity: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .preloader,
+    .wrap {
+        transition-duration: 0.01ms;
+    }
+
+    .preloader__bar span {
+        width: 100%;
+        animation: none;
+    }
 }
 
 .wrap {
@@ -43,7 +128,7 @@ header {
 }
 
 .logo {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif);
     font-size: 20px;
     letter-spacing: 0.28em;
     color: var(--gold);
@@ -62,7 +147,7 @@ header {
 }
 
 .hero h1 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif);
     font-size: 42px;
     letter-spacing: 0.18em;
     color: var(--gold);
@@ -91,7 +176,7 @@ header {
 }
 
 .quote p {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif);
     font-style: italic;
     font-size: 22px;
     line-height: 1.55;
@@ -113,7 +198,7 @@ header {
 }
 
 .contact-section h2 {
-    font-family: 'Cormorant Garamond', serif;
+    font-family: var(--font-serif);
     font-size: 34px;
     font-weight: 500;
     color: var(--text);
@@ -151,7 +236,7 @@ form {
     border: none;
     border-bottom: 1px solid var(--line);
     color: var(--text);
-    font-family: 'Jost', sans-serif;
+    font-family: var(--font-sans);
     font-size: 15px;
     font-weight: 300;
     padding: 8px 0;
@@ -182,7 +267,7 @@ button.submit {
     background: transparent;
     border: 1px solid var(--gold);
     color: var(--gold);
-    font-family: 'Jost', sans-serif;
+    font-family: var(--font-sans);
     font-size: 12px;
     letter-spacing: 0.16em;
     padding: 14px 40px;
