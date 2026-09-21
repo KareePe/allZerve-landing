@@ -149,7 +149,7 @@ $fontsUrl = 'https://fonts.googleapis.com/css2'
 
         <footer>
             <p>ALLZERVE TECHNOLOGY CO., LTD</p>
-            <p><a href="mailto:sarayut.ceo@gmail.com">sarayut.ceo@gmail.com</a></p>
+            <p><a href="mailto:sarayut.ceo@gmail.com">sarayut.ceo@gmail.com </a></p>
         </footer>
     </div>
 
