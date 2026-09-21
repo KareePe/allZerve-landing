@@ -87,8 +87,11 @@ if (!$valid) {
     respond(403, false, 'Your session has expired. Please refresh the page and try again.');
 }
 
-// Honeypot: real users never fill this hidden field
+// Honeypot: real users never fill this hidden field. Answer exactly like a real
+// success so bots learn nothing — but leave a trace, because a password manager
+// filling this field looks identical to a delivered email from the outside.
 if (!empty($_POST['website'])) {
+    error_log('send.php: honeypot triggered, no mail sent (ip=' . ($_SERVER['REMOTE_ADDR'] ?? '?') . ')');
     respond(200, true, 'Thank you. We will be in touch shortly.');
 }
 
@@ -140,7 +143,7 @@ require __DIR__ . '/vendor/autoload.php';
 
 try {
     $resend = Resend::client($apiKey);
-    $resend->emails->send([
+    $sent = $resend->emails->send([
         'from'     => $fromName . ' <' . $fromEmail . '>',
         'to'       => [$mailTo],
         'reply_to' => str_replace(['"', '<', '>', ','], '', $name) . ' <' . $email . '>',
@@ -154,6 +157,8 @@ try {
         )),
         'text'     => "New inquiry from the ALLZERVE website\nReceived {$sentAt}\n\nName: {$name}\nEmail: {$email}\n\nMessage:\n{$message}",
     ]);
+    // The id is the handle to look the message up in the Resend dashboard.
+    error_log('send.php: accepted by Resend, id=' . ($sent->id ?? 'unknown') . ' to=' . $mailTo);
     respond(200, true, 'Thank you. We will be in touch shortly.');
 } catch (Throwable $e) {
     error_log('send.php: Resend error: ' . $e->getMessage());
