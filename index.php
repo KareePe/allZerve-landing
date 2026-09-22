@@ -28,7 +28,7 @@ $fontsUrl = 'https://fonts.googleapis.com/css2'
     . '&family=Noto+Sans+Thai:wght@300;400'
     . '&display=swap';
 
-$siteUrl = 'https://allzerve.com/';
+$siteUrl = 'https://www.allzerve.com/';
 $pageTitle = 'ALLZERVE Technology | M&A Advisory Thailand · ที่ปรึกษา M&A ซื้อขายกิจการ';
 $pageDescription = 'ALLZERVE Technology Thailand: confidential M&A advisory, business sales, factories for sale, '
     . 'valuation, sale and leaseback, and debt restructuring. ที่ปรึกษา M&A ซื้อขายกิจการ ขายโรงงาน ขายฝาก จัดหาเงินทุน';

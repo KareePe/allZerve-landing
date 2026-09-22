@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 Disallow: /send.php
 
-Sitemap: https://allzerve.com/sitemap.xml
+Sitemap: https://www.allzerve.com/sitemap.xml
