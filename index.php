@@ -29,9 +29,10 @@ $fontsUrl = 'https://fonts.googleapis.com/css2'
     . '&display=swap';
 
 $siteUrl = 'https://www.allzerve.com/';
-$pageTitle = 'ALLZERVE Technology | M&A Advisory Thailand · ที่ปรึกษา M&A ซื้อขายกิจการ';
-$pageDescription = 'ALLZERVE Technology Thailand: confidential M&A advisory, business sales, factories for sale, '
-    . 'valuation, sale and leaseback, and debt restructuring. ที่ปรึกษา M&A ซื้อขายกิจการ ขายโรงงาน ขายฝาก จัดหาเงินทุน';
+// Google shows ~60 title / ~155 description characters; keep the Thai keywords inside that.
+$pageTitle = 'ALLZERVE | M&A Advisory Thailand · ที่ปรึกษาซื้อขายกิจการ';
+$pageDescription = 'ที่ปรึกษา M&A ซื้อขายกิจการ ขายบริษัท ขายโรงงาน ขายฝาก ปรับโครงสร้างหนี้ | '
+    . 'ALLZERVE Technology: confidential M&A advisory and business valuation in Thailand.';
 $ogImage = $siteUrl . 'assets/og-image.png';
 $ogImageAlt = 'ALLZERVE: Capital, Real Estate, M&A & Investment';
 
@@ -125,7 +126,7 @@ $structuredData = [
             'areaServed' => ['@type' => 'Country', 'name' => 'Thailand'],
             'address' => ['@type' => 'PostalAddress', 'addressCountry' => 'TH'],
             'knowsLanguage' => ['en', 'th'],
-            'founder' => [
+            'employee' => [
                 '@type' => 'Person',
                 'name' => 'Sarayut Kornrittidet',
                 'jobTitle' => 'Chief Executive Officer',
@@ -166,6 +167,19 @@ $structuredData = [
                 'name' => $f[1],
                 'acceptedAnswer' => ['@type' => 'Answer', 'text' => $f[2]],
             ], $faqs),
+        ],
+        [
+            '@type' => 'WebPage',
+            '@id' => $siteUrl . '#webpage',
+            'url' => $siteUrl,
+            'name' => $pageTitle,
+            'description' => $pageDescription,
+            'inLanguage' => ['en', 'th'],
+            'isPartOf' => ['@id' => $siteUrl . '#website'],
+            'about' => ['@id' => $siteUrl . '#organization'],
+            'primaryImageOfPage' => $ogImage,
+            // Answer engines weigh freshness; this tracks the last deploy of this file.
+            'dateModified' => date('c', filemtime(__FILE__)),
         ],
         [
             '@type' => 'WebSite',
