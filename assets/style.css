@@ -136,7 +136,6 @@ header {
 }
 
 .nav-link {
-    margin-left: 24px;
     font-size: 13px;
     letter-spacing: 0.08em;
     color: var(--text-dim);
@@ -194,18 +193,57 @@ header {
     color: var(--text-dim);
 }
 
-.services-section {
-    padding: 8px 0 56px;
-    border-bottom: 1px solid var(--line);
+
+
+/* --- Collapsible SEO sections -------------------------------------------- */
+
+.more {
+    border-top: 1px solid var(--line);
 }
 
-.services-section h2 {
-    font-family: var(--font-serif);
-    font-size: 34px;
-    font-weight: 500;
-    color: var(--text);
-    text-align: center;
-    margin: 0 0 14px;
+.more summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 22px 0;
+    cursor: pointer;
+    color: var(--text-dim);
+    transition: color 0.2s ease;
+}
+
+.more summary::-webkit-details-marker {
+    display: none;
+}
+
+.more summary:hover,
+.more[open] summary {
+    color: var(--gold);
+}
+
+.more summary h2 {
+    margin: 0;
+    font-family: var(--font-sans);
+    font-size: 12px;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: inherit;
+}
+
+.more summary::after {
+    content: '+';
+    font-size: 14px;
+    line-height: 1;
+}
+
+.more[open] summary::after {
+    content: '\2212';
+}
+
+.more[open] {
+    padding-bottom: 48px;
 }
 
 .services-section .intro {
@@ -247,19 +285,7 @@ header {
     margin-bottom: 8px;
 }
 
-.faq-section {
-    padding: 56px 0;
-    border-bottom: 1px solid var(--line);
-}
 
-.faq-section h2 {
-    font-family: var(--font-serif);
-    font-size: 34px;
-    font-weight: 500;
-    color: var(--text);
-    text-align: center;
-    margin: 0 0 40px;
-}
 
 .faq-list {
     margin: 0;
@@ -413,6 +439,12 @@ footer p {
     color: var(--text-dim);
 }
 
+footer .copyright {
+    margin-top: 20px;
+    font-size: 11px;
+    opacity: 0.7;
+}
+
 footer a {
     text-decoration: none;
     color: var(--text-dim);
@@ -428,19 +460,13 @@ footer a:hover {
         letter-spacing: 0.12em;
     }
 
-    .contact-section h2,
-    .services-section h2,
-    .faq-section h2 {
+    .contact-section h2 {
         font-size: 26px;
     }
 
     .service-list {
         grid-template-columns: 1fr;
         gap: 28px;
-    }
-
-    .nav-link {
-        margin-left: 16px;
     }
 
     .quote p {

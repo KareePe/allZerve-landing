@@ -276,11 +276,7 @@ $e = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
     <div class="wrap">
         <header>
             <div class="logo">ALLZERVE</div>
-            <nav>
-                <a class="nav-link" href="#services">Services</a>
-                <a class="nav-link" href="#faq">FAQ</a>
-                <a class="nav-link" href="#contact">Contact</a>
-            </nav>
+            <a class="nav-link" href="#contact">Contact</a>
         </header>
 
         <section class="hero">
@@ -295,42 +291,8 @@ $e = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
         <hr class="divider" />
 
         <section class="quote">
-            <p>&ldquo;We structure capital, real estate, and strategic transactions for clients who value discretion over noise.&rdquo;</p>
+            <p>&ldquo;We structure capital, real estate, M&A investment and strategic transactions for clients who value discretion over noise.&rdquo;</p>
             <cite>SARAYUT KORNRITTIDET — CHIEF EXECUTIVE OFFICER</cite>
-        </section>
-
-        <section class="services-section" id="services" aria-labelledby="services-title">
-            <h2 id="services-title">Services</h2>
-            <p class="intro">
-                ALLZERVE Technology Co., Ltd. is a confidential M&amp;A advisor in Thailand for owners who want to sell a business,
-                sell a factory, raise capital or restructure debt, without the market knowing.
-            </p>
-            <p class="intro" lang="th">
-                บริษัท ออลล์เซิร์ฟ เทคโนโลยี จำกัด ที่ปรึกษาซื้อขายกิจการและควบรวมกิจการ
-                ดูแลการขายบริษัท ขายโรงงาน ขายฝาก จำนอง และจัดหาเงินทุนอย่างเป็นความลับ
-            </p>
-
-            <ul class="service-list">
-                <?php foreach ($services as [$name, $nameTh, $summary]): ?>
-                    <li>
-                        <h3><?= $e($name) ?></h3>
-                        <p class="th" lang="th"><?= $e($nameTh) ?></p>
-                        <p><?= $e($summary) ?></p>
-                    </li>
-                <?php endforeach; ?>
-            </ul>
-        </section>
-
-        <section class="faq-section" id="faq" aria-labelledby="faq-title">
-            <h2 id="faq-title">Questions</h2>
-            <dl class="faq-list">
-                <?php foreach ($faqs as [$lang, $question, $answer]): ?>
-                    <div lang="<?= $e($lang) ?>">
-                        <dt><?= $e($question) ?></dt>
-                        <dd><?= $e($answer) ?></dd>
-                    </div>
-                <?php endforeach; ?>
-            </dl>
         </section>
 
         <section class="contact-section" id="contact">
@@ -362,14 +324,61 @@ $e = static fn(string $s): string => htmlspecialchars($s, ENT_QUOTES, 'UTF-8');
             </div>
         </form>
 
+        <!-- Collapsed, not hidden: crawlers index <details> content at full weight,
+             and the FAQPage JSON-LD must match text a visitor can open. -->
+        <details class="more services-section" id="services">
+            <summary><h2>Services</h2></summary>
+            <p class="intro">
+                ALLZERVE Technology Co., Ltd. is a confidential M&amp;A advisor in Thailand for owners who want to sell a business,
+                sell a factory, raise capital or restructure debt, without the market knowing.
+            </p>
+            <p class="intro" lang="th">
+                บริษัท ออลล์เซิร์ฟ เทคโนโลยี จำกัด ที่ปรึกษาซื้อขายกิจการและควบรวมกิจการ
+                ดูแลการขายบริษัท ขายโรงงาน ขายฝาก จำนอง และจัดหาเงินทุนอย่างเป็นความลับ
+            </p>
+
+            <ul class="service-list">
+                <?php foreach ($services as [$name, $nameTh, $summary]): ?>
+                    <li>
+                        <h3><?= $e($name) ?></h3>
+                        <p class="th" lang="th"><?= $e($nameTh) ?></p>
+                        <p><?= $e($summary) ?></p>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        </details>
+
+        <details class="more faq-section" id="faq">
+            <summary><h2>Questions</h2></summary>
+            <dl class="faq-list">
+                <?php foreach ($faqs as [$lang, $question, $answer]): ?>
+                    <div lang="<?= $e($lang) ?>">
+                        <dt><?= $e($question) ?></dt>
+                        <dd><?= $e($answer) ?></dd>
+                    </div>
+                <?php endforeach; ?>
+            </dl>
+        </details>
+
         <footer>
             <p>ALLZERVE TECHNOLOGY CO., LTD</p>
             <p lang="th">บริษัท ออลล์เซิร์ฟ เทคโนโลยี จำกัด</p>
             <p><a href="mailto:sarayut.k@allzerve.com">sarayut.k@allzerve.com </a></p>
+            <p class="copyright">&copy; Copyright <?= date('Y') ?> ALLZERVE TECHNOLOGY - All Rights Reserved.</p>
         </footer>
     </div>
 
     <script>
+        // Deep links (#services, #faq) should land on an open panel, not a closed one.
+        (function () {
+            function openTarget() {
+                var el = location.hash && document.getElementById(location.hash.slice(1));
+                if (el && el.tagName === 'DETAILS') el.open = true;
+            }
+            openTarget();
+            addEventListener('hashchange', openTarget);
+        })();
+
         (function () {
             var form = document.getElementById('contact-form');
             var statusEl = form.querySelector('.form-status');
