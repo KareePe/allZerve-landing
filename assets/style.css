@@ -1,7 +1,8 @@
 :root {
     /* Fallbacks are metric-close so the swap from system fonts barely shifts */
-    --font-sans: 'Jost', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
-    --font-serif: 'Cormorant Garamond', Georgia, 'Times New Roman', serif;
+    /* Noto Sans Thai covers glyphs the Latin faces lack, so Thai text stays on-brand */
+    --font-sans: 'Jost', 'Noto Sans Thai', system-ui, -apple-system, 'Segoe UI', Helvetica, Arial, sans-serif;
+    --font-serif: 'Cormorant Garamond', 'Noto Sans Thai', Georgia, 'Times New Roman', serif;
     --bg: #0c1e15;
     --bg-soft: #0f2419;
     --gold: #c9a961;
@@ -135,6 +136,7 @@ header {
 }
 
 .nav-link {
+    margin-left: 24px;
     font-size: 13px;
     letter-spacing: 0.08em;
     color: var(--text-dim);
@@ -189,6 +191,96 @@ header {
     font-style: normal;
     font-size: 12px;
     letter-spacing: 0.12em;
+    color: var(--text-dim);
+}
+
+.services-section {
+    padding: 8px 0 56px;
+    border-bottom: 1px solid var(--line);
+}
+
+.services-section h2 {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: center;
+    margin: 0 0 14px;
+}
+
+.services-section .intro {
+    font-size: 14px;
+    line-height: 1.8;
+    color: var(--text-dim);
+    text-align: center;
+    max-width: 520px;
+    margin: 0 auto 10px;
+}
+
+.service-list {
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 36px 40px;
+    margin: 48px 0 0;
+    padding: 0;
+}
+
+.service-list h3 {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--gold);
+    margin: 0 0 6px;
+}
+
+.service-list p {
+    font-size: 14px;
+    line-height: 1.7;
+    color: var(--text-dim);
+    margin: 0;
+}
+
+.service-list .th {
+    font-size: 13px;
+    color: var(--text);
+    margin-bottom: 8px;
+}
+
+.faq-section {
+    padding: 56px 0;
+    border-bottom: 1px solid var(--line);
+}
+
+.faq-section h2 {
+    font-family: var(--font-serif);
+    font-size: 34px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: center;
+    margin: 0 0 40px;
+}
+
+.faq-list {
+    margin: 0;
+}
+
+.faq-list div + div {
+    margin-top: 28px;
+}
+
+.faq-list dt {
+    font-family: var(--font-serif);
+    font-size: 20px;
+    font-weight: 500;
+    color: var(--gold);
+    margin-bottom: 8px;
+}
+
+.faq-list dd {
+    margin: 0;
+    font-size: 14px;
+    line-height: 1.8;
     color: var(--text-dim);
 }
 
@@ -336,8 +428,19 @@ footer a:hover {
         letter-spacing: 0.12em;
     }
 
-    .contact-section h2 {
+    .contact-section h2,
+    .services-section h2,
+    .faq-section h2 {
         font-size: 26px;
+    }
+
+    .service-list {
+        grid-template-columns: 1fr;
+        gap: 28px;
+    }
+
+    .nav-link {
+        margin-left: 16px;
     }
 
     .quote p {

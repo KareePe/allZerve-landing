@@ -20,11 +20,13 @@ Options -Indexes
     ExpiresByType image/png "access plus 1 year"
     ExpiresByType image/jpeg "access plus 1 year"
     ExpiresByType image/webp "access plus 1 year"
+    ExpiresByType image/x-icon "access plus 1 year"
+    ExpiresByType image/vnd.microsoft.icon "access plus 1 year"
     ExpiresByType font/woff2 "access plus 1 year"
 </IfModule>
 
 <IfModule mod_headers.c>
-    <FilesMatch "\.(css|js|svg|png|jpe?g|webp|woff2?)$">
+    <FilesMatch "\.(css|js|svg|png|jpe?g|webp|ico|woff2?)$">
         Header set Cache-Control "public, max-age=31536000, immutable"
     </FilesMatch>
 
@@ -59,4 +61,6 @@ FileETag None
     # Block dot-directories (.git) and server-only folders
     RewriteRule (^|/)\. - [F,L]
     RewriteRule ^(vendor|templates|storage)(/|$) - [F,L]
+    # Browsers and crawlers request /favicon.ico regardless of the <link> tag.
+    RewriteRule ^favicon\.ico$ assets/favicon.ico [L]
 </IfModule>
